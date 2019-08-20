@@ -1,70 +1,112 @@
-# SQL Fantasy Library
+# Crowdfunding SQL
 
-We're going to build a SQL database that will keep track of books from a fantasy
-series in a library. These types of books can get complex, with many characters
-that span many books in a series, or just appear in one book, and characters
-that are species other than human. We will have tables for: `Characters`,
-`Books`, `Series`, `Authors`, and `Sub-Genres`. For a refresher on SQL syntax as
-you work through this lab, the W3Schools SQL Tutorial is a helpful reference, as
-well as the resources listed below.
+## Learning Goals
 
-## Objectives
+* Identify table example  
+* Create a new table, records, and queries
 
-* Become comfortable writing SQL statements to create tables that have complex
-  relations with each other
-* Understand and implement JOINs to write complex `SELECT` statements to query a
-  database
+## Identify Table Example
 
-## Section 1: `schema.sql`
+`SQL` is a programming language that allows you to "nest" statements inside each
+other. Let's quickly consider an example using grocery data.
 
-Build out the schema for our Fantasy Library database:
+### Create a Grocery Table
 
-1. All tables must have a `PRIMARY KEY` on the id
-2. The `Series` table should have a title and belong to an author and a sub-genre
-3. The `Sub-Genres` table has a name
-4. The `Authors` table has a name
-5. The `Books` table has a title and year and belong to a series
-6. The `Characters` table has a name, motto, and species and belong to an author and a
-   series
-7. The `Books` table has many characters and characters are in many books in a series.
-   How do we accomplish this complex association? With a join table between
-   Characters and Books. This join table (let's call it character_books) will
-   just have -in addition to its primary key- two foreign key columns for the
-   character and book ids. Each row in this join table acts as a relation
-   between a book and a character.
+```sql
+CREATE TABLE groceries (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, aisle INTEGER);
 
-## Section 2: `insert.sql`
+INSERT INTO groceries VALUES (1, "Apples", 2, 1);
+INSERT INTO groceries VALUES (2, "Oranges", 4, 2);
+INSERT INTO groceries VALUES(3, "Peaches", 6, 3);
+```
 
-Populate the database with the following:
+### Selecting Data from the Grocery Table
 
-* 2 series
-* 2 sub-genres
-* 2 authors
-* 3 books in each series
-* 8 characters
-  * 4 characters in each series
-    * of each of those 4, make 2 in all of the books in a series, and 2 in just
-      1 book in a series
-* Note you will need to insert values into your character_books join table
+Given the example SQL above, we'd be able to run a query like
 
-* Feel free to make these up if you don't know any Fantasy series :)
+```sql
+SELECT * FROM groceries;
+```
 
-## Section 3: `update.sql`
+And get back the inserted data (represented in a table below)
 
-Update the species of the last character in the database to "Martian" by writing
-an update statement in `update.sql`.
+```text
+id                 name        quantity      aisle
+------------    ----------  ----------  ----------  
+1                Apples          2          1
+2                Oranges         4          2
+3                Peaches         6          3
+```
 
-## Section 4: Querying your database
+### `SUM`
 
-In `lib/querying.rb`, complete the tests by writing the appropriate queries to
-satisfy the queries. Note that for this section, the database will be seeded
-with external data so don't expect it to reflect the data you added above.
+`SUM` will return the total of the column you select. In this case, the total
+number of items in the `groceries` column is 12.
+
+```sql
+SELECT SUM(quantity) FROM groceries;
+```
+
+### Returns
+
+```sql
+SUM(quantity)
+-------------
+12
+```
+
+To make it a little more useful we can `GROUP BY` the aisle that the items are
+in and `ORDER BY` the sum of the `aisle`.
+
+```sql
+SELECT aisle, SUM(quantity) FROM groceries GROUP BY aisle ORDER BY SUM(quantity);
+```
+
+### Returns
+
+```sql
+aisle    SUM(quantity)
+-------  --------------
+1           2
+2           4
+3           6
+```
+
+## Instructions
+
+In this lab, you have two tasks - first, you will need to create three tables in
+`lib/create.sql`, and populate them with data in `lib/insert.sql`. Then, you
+will need to write the necessary SQL statements inside the methods in
+`lib/sql_queries.rb` that would allow you to query data from your newly created
+tables.
+
+## Create New Table, Records and Queries
+
+Now we're going to create a schema based on the following information:
+
+* A project has a title, a category, a funding goal, a start date, and an end date.
+* A user has a name and an age
+* A pledge has an amount. It belongs to a user, and it also belongs to a project.
+
+### Create the Tables
+
+In the `create.sql` file, model your tables. You should have a table for
+projects, users, and pledges.
+
+### Insert Records into Database
+
+Within the `insert.sql` file, insert 10 projects, 20 users, and 30 pledges into the database.
+
+### Write the Queries
+
+Write SQL queries as strings in `lib/sql_queries` in each of the provided methods.
+
+Run `learn` as you go and read the test messages for additional guidance.
 
 ## Resources
 
-* [W3Schools SQL Tutorial](http://www.w3schools.com/sql/)
-* [Seldom Blog](http://blog.seldomatt.com/blog/2012/10/17/about-sql-joins-the-3-ring-binder-model/) - [About SQL Joins: The 3 Ring Binder Model](http://blog.seldomatt.com/blog/2012/10/17/about-sql-joins-the-3-ring-binder-model/)
+* [Seldom Blog](http://blog.seldomatt.com/) - [About SQL Joins: The 3 Ring Binder Model](http://blog.seldomatt.com/blog/2012/10/17/about-sql-joins-the-3-ring-binder-model/)
 * [Coding Horror](http://blog.codinghorror.com/) - [A Visual Explanation of SQL Joins](http://blog.codinghorror.com/a-visual-explanation-of-sql-joins/)
-* [Geeky is Awesome - SQL Joins Tutorial](https://geekyisawesome.blogspot.com/2011/03/sql-joins-tutorial.html)
+* [Geeky is Awesome](http://geekyisawesome.blogspot.com/) - [SQL Joins Tutorial](http://geekyisawesome.blogspot.com/2011/03/sql-joins-tutorial.html)
 
-<p class='util--hide'>View <a href='https://learn.co/lessons/sql-library-lab'>SQL Library Lab</a> on Learn.co and start learning to code for free.</p>
+<p data-visibility='hidden'>View <a href='https://learn.co/lessons/sql-crowdfunding-lab' title='SQL Crowdfunding Lab'>SQL Crowdfunding Lab</a> on Learn.co and start learning to code for free.</p>
